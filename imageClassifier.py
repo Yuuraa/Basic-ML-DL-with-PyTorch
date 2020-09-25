@@ -136,11 +136,10 @@ with torch.no_grad():
         ouptuts = net(images)
         _, predicted = torch.max(outputs, 1)
         c = (predicted == labels).squeeze()
-        print(c)
         # 한 batch에 있는 것들에 대해
         for i in range(4):
             label = labels[i]
-            class_correct[label] = c[i].item()
+            class_correct[label] += c[i].item()
             class_total[label] += 1
 
 for i in range(10):
