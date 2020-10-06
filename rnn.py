@@ -3,7 +3,7 @@ import torchvision
 import torch.nn as nn # All neural network modules, nn.Linear, nn.Conv2d, BatchNorm, Loss functions
 import torch.optim as optim # For all Optimization algorithms, SGD, Adam, etc.
 import torch.nn.functional as F # All functions that don't have any parameters
-import torch.utils.data import DataLoader # Gives easier dataset management and creates mini batches
+from torch.utils.data import DataLoader # Gives easier dataset management and creates mini batches
 import torchvision.datasets as datasets # Has standard datasets we can import in a nice way
 import torchvision.transforms as transforms # Transformations we can perform on our dataset
 
@@ -36,6 +36,7 @@ class RNN(nn.Module):
         out, _ = self.rnn(x, h0)
         out = out.reshape(out.shape[0], -1)
         out = self.fc(out)
+        return out
 
 # Load Data
 train_dataset = datasets.MNIST(root='dataset/', train=True, transform=transforms.ToTensor(), download=True)
@@ -85,9 +86,8 @@ def check_accuracy(loader, model):
 
     with torch.no_grad():
         for x, y in loader:
-            x = x.to(device=device)
+            x = x.to(device=device).squeeze(1)
             y = y.to(device=device)
-            x = x.reshape(x.shape[0], -1)            
             
             scores = model(x)
             # shape 64 X 10
