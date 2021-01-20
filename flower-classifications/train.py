@@ -25,7 +25,7 @@ transformations = transforms.Compose([
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
-total_dataset = datasets.ImageFloder("../data/flowers", transform = transformations)
+total_dataset = dsets.ImageFolder("./data/flowers", transform = transformations)
 dataset_loader = DataLoader(dataset = total_dataset, batch_size = 100)
 items = iter(dataset_loader)
 image, label = items.next()
