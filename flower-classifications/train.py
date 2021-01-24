@@ -52,7 +52,7 @@ import torch.nn as nn
 
 class FlowerClassifier(nn.Module):
     
-    def __init(self, num_classes=5):
+    def __init__(self, num_classes=5):
         super(FlowerClassifier, self).__init__()
 
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=12, kernel_size=3, stride=1, padding=1)
@@ -99,10 +99,8 @@ if __name__ == '__main__':
             loss = loss_fn(outputs, labels)
             loss.backward()
             optimizer.step()
-        # TODO: Epoch 별 출력문
-        print("Epoch: %d" %epoch)
-        # print(f"Epoch: {epoch}")
-        # print(f'Epoch: {epoch}  loss: {loss}')
+        # Epoch 별 출력문
+        print(f'Epoch: {epoch}  loss: {loss}')
 
 
     model.eval()
@@ -113,3 +111,4 @@ if __name__ == '__main__':
         test_acc_count += torch.sum(prediction == test_labels.data).item()
 
     test_accuracy = test_acc_count / len(test_dataset)
+    print(f'Test loss: {loss}')
