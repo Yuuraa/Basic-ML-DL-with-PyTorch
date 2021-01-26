@@ -1,51 +1,40 @@
 import torch
-from torch.autograd import Variable
 
-# initial weight and hyper parameters
-# TODO: Variable 쓰지 않고도 requires_grad 지정하는 법 있었던 것 같음. 조사
-w = Variable(torch.Tensor([1.0]), requires_grad=True)
-learning_rate = 0.01
-num_epoch = 100
-
-# Training Data & Test data
 x_data = [1.0, 2.0, 3.0]
 y_data = [2.0, 4.0, 6.0]
-x_test = [4.0]
-y_test = [8.0]
+w = torch.tensor([1.0], requires_grad=True)
 
-# Initialize the weight, w
-def init_weight(val = 1.0):
-    global w
-    w = val
+# Hyperparameters
+learning_rate = 0.01
+num_epoch = 10
 
 
-# Our model for the forward pass
+# Forward pass
 def forward(x):
-    return x * w
+    return w * x
 
 
 # Loss function
-def MSE_loss(y_pred, y):
-    return (y_pred - y) ** 2
+def loss(y_pred, y_val):
+    return (y_pred - y_val) ** 2
 
 
-# Train the model to find w
+# Before training
 for epoch in range(num_epoch):
     for x_val, y_val in zip(x_data, y_data):
-        y_pred = forward(x_val)
-        l = MSE_loss(y_pred, y_val)
-        l.backward()
-        print("\tgrad: ", x_val, y_val, w.grad.data[0])
-        # gradient 값이 w.grad.data에 저장됨
-        w = w - learning_rate * w.grad.data
+        y_pred = forward(x_val) # 1. Forward pass
+        l = loss(y_pred, y_val) # 2. Calculate Loss
+        l.backward() # Backpropagation to calculate gradients
+        print(f"\t grad: {w.grad.item()} x: {x_val}, y: {y_val}")
+        w.data = w.data - learning_rate * w.grad.item()
+
+        # Manually zero the gradients after updating weights
+        w.grad.data.zero_()
+
+    print(f"Epoch: {epoch} | Loss: {l.item()}")
+
+# After training
+print(f"Prediction (after training), input: 4, \
+    accuracy: {1 - loss(forward(4).item(), 8)} ")
+
     
-    print("Progress: ", epoch, "w: ", w, "loss: ", l)
-
-
-# Test the model and print accuracy
-total_loss = 0
-for x_val, y_val in zip(x_data, y_data):
-    y_pred = forward(x_val)
-    l = MSE_loss(y_pred, y_val)
-    total_loss += l
-print('Loss after training: ', total_loss / len(x_data))
