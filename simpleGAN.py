@@ -8,6 +8,11 @@ import torchvision.transforms as transforms
 from torch.utils.tensorboard import SummaryWriter
 
 # GANs are very sensitive to hyperparameters!!
+# Things to try:
+# 1. What happens if you use larger network?
+# 2. Better normalization with BatchNorm
+# 3. Differente learning rate (is there a better one)?
+# 4. Try changing architecture to a CNN
 
 class Discriminator(nn.Module):
     def __init__(self, img_dim):
